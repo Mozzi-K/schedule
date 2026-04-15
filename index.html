@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>중고등부 토요교제 순번표 2026</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #FAFBFC; color: #1E293B;
+    max-width: 720px; margin: 0 auto; padding: 16px 12px;
+    height: 100vh; height: 100dvh;
+    display: flex; flex-direction: column;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+  .header { text-align: center; margin-bottom: 12px; }
+  .header h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .header p { font-size: 12px; color: #94A3B8; }
+
+  .month-nav {
+    display: -webkit-flex; display: flex; gap: 2px; margin-bottom: 10px;
+    overflow-x: auto; flex-shrink: 0; padding: 2px 0;
+    -webkit-overflow-scrolling: touch;
+  }
+  .month-nav::-webkit-scrollbar { display: none; }
+  .month-btn {
+    -webkit-flex: 0 0 auto; flex: 0 0 auto;
+    padding: 5px 10px; border-radius: 16px; border: none;
+    font-size: 12px; font-weight: 500; background: transparent; color: #64748B;
+    cursor: pointer; -webkit-transition: all 0.2s; transition: all 0.2s;
+    font-family: inherit;
+  }
+  .month-btn.active { font-weight: 700; background: #4F46E5; color: #fff; }
+
+  .toolbar {
+    display: -webkit-flex; display: flex; gap: 8px; margin-bottom: 8px;
+    font-size: 11px; color: #64748B;
+    -webkit-align-items: center; align-items: center;
+    -webkit-flex-wrap: wrap; flex-wrap: wrap; flex-shrink: 0;
+  }
+  .toolbar-btns {
+    margin-left: auto;
+    display: -webkit-flex; display: flex; gap: 6px;
+  }
+  .btn-undo, .btn-reset {
+    padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+  }
+  .btn-undo { border: 1px solid #E2E8F0; background: #fff; color: #4F46E5; }
+  .btn-undo:disabled { color: #CBD5E1; cursor: default; }
+  .btn-reset { border: 1px solid #FEE2E2; background: #fff; color: #EF4444; }
+
+  .table-wrap {
+    -webkit-flex: 1; flex: 1;
+    overflow: auto; border-radius: 12px; border: 1px solid #E2E8F0;
+    background: #fff; -webkit-overflow-scrolling: touch;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr {
+    position: -webkit-sticky; position: sticky; top: 0;
+    background: #F8FAFC; z-index: 10;
+    border-bottom: 2px solid #E2E8F0;
+  }
+  th { padding: 10px 6px; font-weight: 700; }
+  th.col-date { text-align: left; color: #475569; width: 24%; }
+  th.col-event { text-align: left; color: #475569; width: 18%; }
+  th.col-brother { text-align: center; color: #4338CA; width: 25%; }
+  th.col-sister { text-align: center; color: #831843; width: 25%; }
+
+  .month-sep td {
+    padding: 10px 10px 6px; font-size: 13px; font-weight: 800; color: #4F46E5;
+    background: #F8FAFC; letter-spacing: 0.5px;
+  }
+  .month-sep td { border-top: 2px solid #E2E8F0; }
+  .month-sep.first td { border-top: none; }
+
+  tr.row { border-bottom: 1px solid #F1F5F9; }
+  tr.row.past { opacity: 0.55; }
+  tr.row.next { background: #FFFBEB; }
+  tr.row.ev { background: #F1F5F9; }
+  tr.row.next .cd { font-weight: 700; color: #D97706; }
+
+  .cd { padding: 8px 6px; font-size: 12px; font-weight: 500; color: #334155; white-space: nowrap; position: relative; }
+  .nxt-bar {
+    position: absolute; left: -1px; top: 15%; width: 3px; height: 70%;
+    border-radius: 2px; background: #F59E0B;
+  }
+
+  .ce { padding: 8px 6px; }
+  .ev-lbl {
+    font-size: 12px; padding: 2px 6px; border-radius: 4px; display: inline-block; cursor: pointer;
+  }
+  .ev-lbl.has { color: #6366F1; font-weight: 600; }
+  .ev-lbl.no { color: #CBD5E1; font-weight: 400; }
+  .ev-edit { display: -webkit-flex; display: flex; gap: 4px; }
+  .ev-edit input {
+    -webkit-flex: 1; flex: 1;
+    padding: 3px 6px; border: 1px solid #C7D2FE; border-radius: 6px;
+    font-size: 12px; outline: none; font-family: inherit; min-width: 0;
+  }
+  .ev-edit button {
+    padding: 3px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: inherit;
+  }
+  .ev-edit .bok { border: none; background: #4F46E5; color: #fff; }
+  .ev-edit .bno { border: 1px solid #E2E8F0; background: #fff; color: #64748B; }
+
+  .cn { padding: 8px 4px; text-align: center; }
+
+  .chip {
+    display: -webkit-inline-flex; display: inline-flex;
+    -webkit-align-items: center; align-items: center;
+    gap: 4px; padding: 5px 11px; border-radius: 20px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    -webkit-transition: all 0.2s ease; transition: all 0.2s ease;
+    outline: none; border: 1.5px solid; font-family: inherit;
+    -webkit-user-select: none; user-select: none;
+    -webkit-appearance: none; appearance: none;
+  }
+  .chip.sel { border-width: 2.5px; color: #fff; }
+  .chip-no { color: #94A3B8; font-size: 13px; font-style: italic; }
+
+  .hist {
+    margin-top: 8px; padding: 8px 12px; background: #F8FAFC; border-radius: 10px;
+    border: 1px solid #E2E8F0; max-height: 80px; overflow: auto; flex-shrink: 0;
+  }
+  .hist-t { font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; }
+  .hist-i { font-size: 11px; color: #475569; line-height: 1.6; }
+  .hist-i .d { color: #4F46E5; }
+  .hist-i .tp { color: #94A3B8; margin-left: 4px; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%;
+    -webkit-transform: translateX(-50%); transform: translateX(-50%);
+    background: #1E293B; color: #fff; padding: 10px 20px; border-radius: 20px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    z-index: 100; pointer-events: none;
+    -webkit-animation: fi 0.3s ease; animation: fi 0.3s ease;
+  }
+  @-webkit-keyframes fi {
+    from { opacity: 0; -webkit-transform: translate(-50%, 10px); }
+    to { opacity: 1; -webkit-transform: translate(-50%, 0); }
+  }
+  @keyframes fi {
+    from { opacity: 0; transform: translate(-50%, 10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⛪ 중고등부 토요교제 순번표</h1>
+  <p>2026년 • 이름을 클릭해서 순서를 교환하세요 (형제↔형제, 자매↔자매 독립)</p>
+</div>
+<div class="month-nav" id="mnav"></div>
+<div class="toolbar">
+  <span>↔ 교환됨</span><span>•</span><span>형제/자매 독립 교환</span>
+  <div class="toolbar-btns">
+    <button class="btn-undo" id="bUndo" disabled onclick="undoLast()">↩ 되돌리기</button>
+    <button class="btn-reset" onclick="resetAll()">초기화</button>
+  </div>
+</div>
+<div class="table-wrap" id="tw">
+  <table><thead><tr>
+    <th class="col-date">날짜</th>
+    <th class="col-event">일정</th>
+    <th class="col-brother">형제T</th>
+    <th class="col-sister">자매T</th>
+  </tr></thead><tbody id="tb"></tbody></table>
+</div>
+<div class="hist" id="hBox" style="display:none">
+  <div class="hist-t" id="hTitle"></div>
+  <div id="hList"></div>
+</div>
+<div class="toast" id="tst" style="display:none"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var BROS = ["심어진","임우혁","정형기","홍정의","김호진"];
+  var SISS = ["김유진","김호연","심규리","정희주"];
+
+  var MAN = {
+    "2026-01-10":{b:"김호진",s:"심규리"},
+    "2026-01-17":{ev:"대전도집회"},
+    "2026-01-24":{b:"심어진",s:"정희주"},
+    "2026-01-31":{ev:"중고등부 집회"},
+    "2026-02-07":{b:"정형기",s:"김호연"},
+    "2026-02-14":{ev:"설연휴"},
+    "2026-02-21":{b:"홍정의",s:"심규리"},
+    "2026-02-28":{b:"김호진",s:"정희주"}
+  };
+  var ASTART = "2026-03-07";
+
+  var BC = {
+    "김호진":{bg:"#EEF2FF",bd:"#818CF8",tx:"#4338CA"},
+    "심어진":{bg:"#F0FDF4",bd:"#86EFAC",tx:"#166534"},
+    "임우혁":{bg:"#FFF7ED",bd:"#FDBA74",tx:"#9A3412"},
+    "정형기":{bg:"#FDF2F8",bd:"#F9A8D4",tx:"#9D174D"},
+    "홍정의":{bg:"#F5F3FF",bd:"#C4B5FD",tx:"#5B21B6"}
+  };
+  var SC = {
+    "김유진":{bg:"#ECFDF5",bd:"#6EE7B7",tx:"#065F46"},
+    "김호연":{bg:"#FEF3C7",bd:"#FCD34D",tx:"#92400E"},
+    "심규리":{bg:"#E0F2FE",bd:"#7DD3FC",tx:"#075985"},
+    "정희주":{bg:"#FCE7F3",bd:"#F9A8D4",tx:"#831843"}
+  };
+
+  function pad(n){ return n < 10 ? "0"+n : ""+n; }
+
+  function genSat(){
+    var r = [];
+    var d = new Date(Date.UTC(2026,0,10));
+    while(d.getUTCFullYear() <= 2026){
+      r.push(d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate()));
+      d = new Date(d.getTime() + 604800000);
+    }
+    return r;
+  }
+  var SATS = genSat();
+
+  function fmtD(iso){
+    var d = new Date(iso+"T00:00:00Z");
+    var dow = ["일","월","화","수","목","금","토"][d.getUTCDay()];
+    return (d.getUTCMonth()+1)+"/"+d.getUTCDate()+" ("+dow+")";
+  }
+
+  function copyObj(o){
+    var r = {};
+    for(var k in o) if(o.hasOwnProperty(k)) r[k] = o[k];
+    return r;
+  }
+
+  var events = {"2026-01-17":"대전도집회","2026-01-31":"중고등부 집회","2026-02-14":"설연휴"};
+  var sched = [];
+  var selB = null, selS = null;
+  var hist = [];
+  var editIdx = null;
+  var scMo = 1;
+
+  function build(){
+    sched = [];
+    var bi = 0, si = 0;
+    for(var i = 0; i < SATS.length; i++){
+      var date = SATS[i];
+      var m = MAN[date];
+      if(date < ASTART && m){
+        if(m.ev){
+          sched.push({date:date, event:m.ev, brother:"", sister:"", bs:false, ss:false});
+        } else {
+          sched.push({date:date, event:"", brother:m.b||"", sister:m.s||"", bs:false, ss:false});
+        }
+      } else if(date < ASTART){
+        var ev = events[date] || "";
+        sched.push({date:date, event:ev, brother:"", sister:"", bs:false, ss:false});
+      } else {
+        var ev2 = events[date] || "";
+        if(ev2){
+          sched.push({date:date, event:ev2, brother:"", sister:"", bs:false, ss:false});
+        } else {
+          sched.push({date:date, event:"", brother:BROS[bi%BROS.length], sister:SISS[si%SISS.length], bs:false, ss:false});
+          bi++; si++;
+        }
+      }
+    }
+  }
+
+  var tTimer;
+  function toast(msg){
+    var t = document.getElementById("tst");
+    t.textContent = msg; t.style.display = "block";
+    clearTimeout(tTimer);
+    tTimer = setTimeout(function(){ t.style.display = "none"; }, 2500);
+  }
+
+  function mkChip(name, type, idx, sel, swp, dis){
+    if(!name) return '<span class="chip-no">\u2014</span>';
+    var c = type === "b" ? (BC[name]||{bg:"#F1F5F9",bd:"#CBD5E1",tx:"#475569"}) : (SC[name]||{bg:"#F1F5F9",bd:"#CBD5E1",tx:"#475569"});
+    var cls = "chip" + (sel ? " sel" : "");
+    var bg = sel ? c.bd : c.bg;
+    var color = sel ? "#fff" : c.tx;
+    var bdr = sel ? "2.5px solid "+c.bd : "1.5px solid "+c.bd;
+    var shd = sel ? "0 0 0 3px "+c.bd+"44" : (swp ? "0 2px 8px "+c.bd+"66" : "none");
+    var oc = dis ? "" : " onclick=\""+(type==="b"?"window._cB":"window._cS")+"("+idx+")\"";
+    var sw = swp ? "\u21C4 " : "";
+    return '<button class="'+cls+'" style="background:'+bg+';color:'+color+';border:'+bdr+';box-shadow:'+shd+'"'+oc+'>'+sw+name+'</button>';
+  }
+
+  function render(){
+    var today = new Date().toISOString().slice(0,10);
+    var nIdx = -1;
+    for(var x = 0; x < sched.length; x++){
+      if(sched[x].date >= today){ nIdx = x; break; }
+    }
+    var tb = document.getElementById("tb");
+    tb.innerHTML = "";
+    var ms = [];
+    var lastM = -1;
+
+    for(var i = 0; i < sched.length; i++){
+      var row = sched[i];
+      var mo = parseInt(row.date.slice(5,7), 10);
+      var mStart = (mo !== lastM);
+      lastM = mo;
+      var isN = (i === nIdx);
+      var isP = (row.date < today);
+
+      if(mStart){
+        ms.push(mo);
+        var mtr = document.createElement("tr");
+        mtr.className = "month-sep" + (i === 0 ? " first" : "");
+        mtr.id = "mo-" + mo;
+        mtr.innerHTML = '<td colspan="4">' + mo + '월</td>';
+        tb.appendChild(mtr);
+      }
+
+      var tr = document.createElement("tr");
+      var cls = "row";
+      if(isP) cls += " past";
+      if(isN) cls += " next";
+      if(row.event) cls += " ev";
+      tr.className = cls;
+
+      var dh = (isN ? '<span class="nxt-bar"></span>' : '') + fmtD(row.date);
+
+      var eh;
+      if(editIdx === i){
+        eh = '<div class="ev-edit"><input id="evi" value="'+(row.event||"")+'" placeholder="일정 입력 (빈칸=삭제)"><button class="bok" onclick="window._sEv('+i+')">✓</button><button class="bno" onclick="window._cEv()">✕</button></div>';
+      } else if(row.event){
+        eh = '<span class="ev-lbl has"'+(isP?'':' onclick="window._eEv('+i+')"')+'>'+row.event+'</span>';
+      } else {
+        eh = isP ? '' : '<span class="ev-lbl no" onclick="window._eEv('+i+')">＋</span>';
+      }
+
+      tr.innerHTML = '<td class="cd">'+dh+'</td><td class="ce">'+eh+'</td><td class="cn">'+mkChip(row.brother,"b",i,selB===i,row.bs,isP||!!row.event)+'</td><td class="cn">'+mkChip(row.sister,"s",i,selS===i,row.ss,isP||!!row.event)+'</td>';
+      tb.appendChild(tr);
+
+      if(editIdx === i){
+        (function(){
+          setTimeout(function(){
+            var inp = document.getElementById("evi");
+            if(inp){
+              inp.focus();
+              inp.addEventListener("keydown", function(e){
+                if(e.key === "Enter") window._sEv(i);
+              });
+            }
+          }, 50);
+        })();
+      }
+    }
+    renderNav(ms);
+    renderHist();
+    document.getElementById("bUndo").disabled = (hist.length === 0);
+  }
+
+  function renderNav(ms){
+    var nav = document.getElementById("mnav");
+    nav.innerHTML = "";
+    for(var j = 0; j < ms.length; j++){
+      var m = ms[j];
+      var btn = document.createElement("button");
+      btn.className = "month-btn" + (scMo === m ? " active" : "");
+      btn.textContent = m + "월";
+      (function(mm){ btn.onclick = function(){ scrollM(mm); }; })(m);
+      nav.appendChild(btn);
+    }
+  }
+
+  function renderHist(){
+    var box = document.getElementById("hBox");
+    if(hist.length === 0){ box.style.display = "none"; return; }
+    box.style.display = "block";
+    document.getElementById("hTitle").textContent = "교환 이력 (" + hist.length + "건)";
+    var list = document.getElementById("hList");
+    list.innerHTML = "";
+    for(var i = 0; i < hist.length; i++){
+      var s = hist[i];
+      var div = document.createElement("div");
+      div.className = "hist-i";
+      div.innerHTML = '<span class="d">'+fmtD(sched[s.fi].date)+'</span> '+s.fn+' ↔ <span class="d">'+fmtD(sched[s.ti].date)+'</span> '+s.tn+'<span class="tp">('+( s.tp === "b" ? "형제" : "자매" )+')</span>';
+      list.appendChild(div);
+    }
+  }
+
+  function scrollM(m){
+    var el = document.getElementById("mo-"+m);
+    var wrap = document.getElementById("tw");
+    if(el && wrap){
+      wrap.scrollTop += el.getBoundingClientRect().top - wrap.getBoundingClientRect().top - 8;
+    }
+  }
+
+  document.getElementById("tw").addEventListener("scroll", function(){
+    var wrap = this;
+    var cur = 1;
+    for(var m = 1; m <= 12; m++){
+      var el = document.getElementById("mo-"+m);
+      if(el && el.offsetTop - wrap.offsetTop <= wrap.scrollTop + 60) cur = m;
+    }
+    if(cur !== scMo){
+      scMo = cur;
+      var active = [];
+      for(var mm = 1; mm <= 12; mm++){
+        if(document.getElementById("mo-"+mm)) active.push(mm);
+      }
+      renderNav(active);
+    }
+  });
+
+  // 형제 클릭
+  window._cB = function(idx){
+    var row = sched[idx];
+    if(row.event || !row.brother) return;
+    if(selB === null){ selB = idx; render(); return; }
+    if(selB === idx){ selB = null; render(); return; }
+    var a = sched[selB], b = sched[idx];
+    if(a.brother === b.brother){ toast("같은 사람끼리는 교환할 수 없어요"); selB = null; render(); return; }
+    var fn = a.brother, tn = b.brother;
+    var na = copyObj(a); na.brother = tn; na.bs = true; sched[selB] = na;
+    var nb = copyObj(b); nb.brother = fn; nb.bs = true; sched[idx] = nb;
+    hist.push({tp:"b", fi:selB, ti:idx, fn:fn, tn:tn});
+    selB = null; render();
+    toast(fn+" ↔ "+tn+" 교환 완료!");
+  };
+
+  // 자매 클릭
+  window._cS = function(idx){
+    var row = sched[idx];
+    if(row.event || !row.sister) return;
+    if(selS === null){ selS = idx; render(); return; }
+    if(selS === idx){ selS = null; render(); return; }
+    var a = sched[selS], b = sched[idx];
+    if(a.sister === b.sister){ toast("같은 사람끼리는 교환할 수 없어요"); selS = null; render(); return; }
+    var fn = a.sister, tn = b.sister;
+    var na = copyObj(a); na.sister = tn; na.ss = true; sched[selS] = na;
+    var nb = copyObj(b); nb.sister = fn; nb.ss = true; sched[idx] = nb;
+    hist.push({tp:"s", fi:selS, ti:idx, fn:fn, tn:tn});
+    selS = null; render();
+    toast(fn+" ↔ "+tn+" 교환 완료!");
+  };
+
+  // 되돌리기
+  window.undoLast = function(){
+    if(!hist.length) return;
+    var last = hist.pop();
+    var key = last.tp === "b" ? "brother" : "sister";
+    var a = sched[last.fi], b = sched[last.ti];
+    var na = copyObj(a);
+    var nb = copyObj(b);
+    var tmp = na[key];
+    na[key] = nb[key];
+    nb[key] = tmp;
+    sched[last.fi] = na;
+    sched[last.ti] = nb;
+    render(); toast("교환을 되돌렸어요");
+  };
+
+  // 초기화
+  window.resetAll = function(){
+    build(); hist = []; selB = null; selS = null;
+    render(); toast("전체 순번을 초기화했어요");
+  };
+
+  // 일정 편집
+  window._eEv = function(idx){ editIdx = idx; render(); };
+  window._cEv = function(){ editIdx = null; render(); };
+  window._sEv = function(idx){
+    var inp = document.getElementById("evi");
+    var val = inp ? inp.value.replace(/^\s+|\s+$/g,"") : "";
+    var date = sched[idx].date;
+    if(val) events[date] = val; else delete events[date];
+    build(); hist = []; selB = null; selS = null; editIdx = null;
+    render(); toast(val ? "일정 추가 → 순번 재배정" : "일정 삭제 → 순번 재배정");
+  };
+
+  // 초기 실행
+  build();
+  render();
+
+  // 다음 교제일로 스크롤
+  setTimeout(function(){
+    var today = new Date().toISOString().slice(0,10);
+    for(var i = 0; i < sched.length; i++){
+      if(sched[i].date >= today){
+        scrollM(parseInt(sched[i].date.slice(5,7), 10));
+        break;
+      }
+    }
+  }, 300);
+
+})();
+</script>
+</body>
+</html>
