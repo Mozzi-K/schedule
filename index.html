@@ -4,189 +4,122 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>중고등부 토요교제 순번표 2026</title>
 <style>
   @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #FAFBFC; color: #1E293B;
-    max-width: 720px; margin: 0 auto; padding: 16px 12px;
-    height: 100vh; height: 100dvh;
-    display: flex; flex-direction: column;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-text-size-adjust: 100%;
-  }
-  .header { text-align: center; margin-bottom: 12px; }
-  .header h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
-  .header p { font-size: 12px; color: #94A3B8; }
-
-  .month-nav {
-    display: -webkit-flex; display: flex; gap: 2px; margin-bottom: 10px;
-    overflow-x: auto; flex-shrink: 0; padding: 2px 0;
-    -webkit-overflow-scrolling: touch;
-  }
-  .month-nav::-webkit-scrollbar { display: none; }
-  .month-btn {
-    -webkit-flex: 0 0 auto; flex: 0 0 auto;
-    padding: 5px 10px; border-radius: 16px; border: none;
-    font-size: 12px; font-weight: 500; background: transparent; color: #64748B;
-    cursor: pointer; -webkit-transition: all 0.2s; transition: all 0.2s;
-    font-family: inherit;
-  }
-  .month-btn.active { font-weight: 700; background: #4F46E5; color: #fff; }
-
-  .toolbar {
-    display: -webkit-flex; display: flex; gap: 8px; margin-bottom: 8px;
-    font-size: 11px; color: #64748B;
-    -webkit-align-items: center; align-items: center;
-    -webkit-flex-wrap: wrap; flex-wrap: wrap; flex-shrink: 0;
-  }
-  .toolbar-btns {
-    margin-left: auto;
-    display: -webkit-flex; display: flex; gap: 6px;
-  }
-  .btn-undo, .btn-reset {
-    padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
-    cursor: pointer; font-family: inherit;
-  }
-  .btn-undo { border: 1px solid #E2E8F0; background: #fff; color: #4F46E5; }
-  .btn-undo:disabled { color: #CBD5E1; cursor: default; }
-  .btn-reset { border: 1px solid #FEE2E2; background: #fff; color: #EF4444; }
-
-  .table-wrap {
-    -webkit-flex: 1; flex: 1;
-    overflow: auto; border-radius: 12px; border: 1px solid #E2E8F0;
-    background: #fff; -webkit-overflow-scrolling: touch;
-  }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead tr {
-    position: -webkit-sticky; position: sticky; top: 0;
-    background: #F8FAFC; z-index: 10;
-    border-bottom: 2px solid #E2E8F0;
-  }
-  th { padding: 10px 6px; font-weight: 700; }
-  th.col-date { text-align: left; color: #475569; width: 24%; }
-  th.col-event { text-align: left; color: #475569; width: 18%; }
-  th.col-brother { text-align: center; color: #4338CA; width: 25%; }
-  th.col-sister { text-align: center; color: #831843; width: 25%; }
-
-  .month-sep td {
-    padding: 10px 10px 6px; font-size: 13px; font-weight: 800; color: #4F46E5;
-    background: #F8FAFC; letter-spacing: 0.5px;
-  }
-  .month-sep td { border-top: 2px solid #E2E8F0; }
-  .month-sep.first td { border-top: none; }
-
-  tr.row { border-bottom: 1px solid #F1F5F9; }
-  tr.row.past { opacity: 0.55; }
-  tr.row.next { background: #FFFBEB; }
-  tr.row.ev { background: #F1F5F9; }
-  tr.row.next .cd { font-weight: 700; color: #D97706; }
-
-  .cd { padding: 8px 6px; font-size: 12px; font-weight: 500; color: #334155; white-space: nowrap; position: relative; }
-  .nxt-bar {
-    position: absolute; left: -1px; top: 15%; width: 3px; height: 70%;
-    border-radius: 2px; background: #F59E0B;
-  }
-
-  .ce { padding: 8px 6px; }
-  .ev-lbl {
-    font-size: 12px; padding: 2px 6px; border-radius: 4px; display: inline-block; cursor: pointer;
-  }
-  .ev-lbl.has { color: #6366F1; font-weight: 600; }
-  .ev-lbl.no { color: #CBD5E1; font-weight: 400; }
-  .ev-edit { display: -webkit-flex; display: flex; gap: 4px; }
-  .ev-edit input {
-    -webkit-flex: 1; flex: 1;
-    padding: 3px 6px; border: 1px solid #C7D2FE; border-radius: 6px;
-    font-size: 12px; outline: none; font-family: inherit; min-width: 0;
-  }
-  .ev-edit button {
-    padding: 3px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; font-family: inherit;
-  }
-  .ev-edit .bok { border: none; background: #4F46E5; color: #fff; }
-  .ev-edit .bno { border: 1px solid #E2E8F0; background: #fff; color: #64748B; }
-
-  .cn { padding: 8px 4px; text-align: center; }
-
-  .chip {
-    display: -webkit-inline-flex; display: inline-flex;
-    -webkit-align-items: center; align-items: center;
-    gap: 4px; padding: 5px 11px; border-radius: 20px;
-    font-size: 13px; font-weight: 600; cursor: pointer;
-    -webkit-transition: all 0.2s ease; transition: all 0.2s ease;
-    outline: none; border: 1.5px solid; font-family: inherit;
-    -webkit-user-select: none; user-select: none;
-    -webkit-appearance: none; appearance: none;
-  }
-  .chip.sel { border-width: 2.5px; color: #fff; }
-  .chip-no { color: #94A3B8; font-size: 13px; font-style: italic; }
-
-  .hist {
-    margin-top: 8px; padding: 8px 12px; background: #F8FAFC; border-radius: 10px;
-    border: 1px solid #E2E8F0; max-height: 80px; overflow: auto; flex-shrink: 0;
-  }
-  .hist-t { font-size: 11px; font-weight: 700; color: #64748B; margin-bottom: 4px; }
-  .hist-i { font-size: 11px; color: #475569; line-height: 1.6; }
-  .hist-i .d { color: #4F46E5; }
-  .hist-i .tp { color: #94A3B8; margin-left: 4px; }
-
-  .toast {
-    position: fixed; bottom: 24px; left: 50%;
-    -webkit-transform: translateX(-50%); transform: translateX(-50%);
-    background: #1E293B; color: #fff; padding: 10px 20px; border-radius: 20px;
-    font-size: 13px; font-weight: 600;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-    z-index: 100; pointer-events: none;
-    -webkit-animation: fi 0.3s ease; animation: fi 0.3s ease;
-  }
-  @-webkit-keyframes fi {
-    from { opacity: 0; -webkit-transform: translate(-50%, 10px); }
-    to { opacity: 1; -webkit-transform: translate(-50%, 0); }
-  }
-  @keyframes fi {
-    from { opacity: 0; transform: translate(-50%, 10px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Pretendard','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,sans-serif;background:#FAFBFC;color:#1E293B;max-width:720px;margin:0 auto;padding:16px 12px;height:100vh;height:100dvh;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+  .hd{text-align:center;margin-bottom:12px}
+  .hd h1{font-size:20px;font-weight:800;letter-spacing:-0.5px;margin-bottom:4px}
+  .hd p{font-size:12px;color:#94A3B8;margin:0}
+  .sync{display:-webkit-flex;display:flex;-webkit-justify-content:center;justify-content:center;-webkit-align-items:center;align-items:center;gap:8px;font-size:11px;color:#94A3B8;margin-top:4px}
+  .sync .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+  .sync .on{background:#22C55E}
+  .sync .off{background:#EF4444}
+  .sync button{border:none;background:none;color:#4F46E5;font-size:11px;cursor:pointer;font-weight:600;font-family:inherit;padding:0}
+  .mn{display:-webkit-flex;display:flex;gap:2px;margin-bottom:10px;overflow-x:auto;-webkit-flex-shrink:0;flex-shrink:0;padding:2px 0;-webkit-overflow-scrolling:touch}
+  .mn::-webkit-scrollbar{display:none}
+  .mb{-webkit-flex:0 0 auto;flex:0 0 auto;padding:5px 10px;border-radius:16px;border:none;font-size:12px;font-weight:500;background:transparent;color:#64748B;cursor:pointer;-webkit-transition:all .2s;transition:all .2s;font-family:inherit}
+  .mb.a{font-weight:700;background:#4F46E5;color:#fff}
+  .tb{display:-webkit-flex;display:flex;gap:8px;margin-bottom:8px;font-size:11px;color:#64748B;-webkit-align-items:center;align-items:center;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-flex-shrink:0;flex-shrink:0}
+  .tbb{margin-left:auto;display:-webkit-flex;display:flex;gap:6px}
+  .bu,.br{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+  .bu{border:1px solid #E2E8F0;background:#fff;color:#4F46E5}
+  .bu:disabled{color:#CBD5E1;cursor:default}
+  .br{border:1px solid #FEE2E2;background:#fff;color:#EF4444}
+  .tw{-webkit-flex:1;flex:1;overflow:auto;border-radius:12px;border:1px solid #E2E8F0;background:#fff;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead tr{position:-webkit-sticky;position:sticky;top:0;background:#F8FAFC;z-index:10;border-bottom:2px solid #E2E8F0}
+  th{padding:10px 6px;font-weight:700}
+  .ms td{padding:10px 10px 6px;font-size:13px;font-weight:800;color:#4F46E5;background:#F8FAFC;letter-spacing:.5px;border-top:2px solid #E2E8F0}
+  .ms.f td{border-top:none}
+  tr.r{border-bottom:1px solid #F1F5F9}
+  tr.r.p{opacity:.55}
+  tr.r.n{background:#FFFBEB}
+  tr.r.ev{background:#F1F5F9}
+  tr.r.n .cd{font-weight:700;color:#D97706}
+  .cd{padding:8px 6px;font-size:12px;font-weight:500;color:#334155;white-space:nowrap;position:relative}
+  .nb{position:absolute;left:-1px;top:15%;width:3px;height:70%;border-radius:2px;background:#F59E0B}
+  .ce{padding:8px 6px}
+  .el{font-size:12px;padding:2px 6px;border-radius:4px;display:inline-block;cursor:pointer}
+  .el.h{color:#6366F1;font-weight:600}
+  .el.no{color:#CBD5E1;font-weight:400}
+  .ee{display:-webkit-flex;display:flex;gap:4px}
+  .ee input{-webkit-flex:1;flex:1;padding:3px 6px;border:1px solid #C7D2FE;border-radius:6px;font-size:12px;outline:none;font-family:inherit;min-width:0}
+  .ee button{padding:3px 8px;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit}
+  .ee .ok{border:none;background:#4F46E5;color:#fff}
+  .ee .no2{border:1px solid #E2E8F0;background:#fff;color:#64748B}
+  .cn{padding:8px 4px;text-align:center}
+  .ch{display:-webkit-inline-flex;display:inline-flex;-webkit-align-items:center;align-items:center;gap:4px;padding:5px 11px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;-webkit-transition:all .2s;transition:all .2s;outline:none;border:1.5px solid;font-family:inherit;-webkit-user-select:none;user-select:none;-webkit-appearance:none;appearance:none}
+  .ch.sel{border-width:2.5px;color:#fff}
+  .chn{color:#94A3B8;font-size:13px;font-style:italic}
+  .hi{margin-top:8px;padding:8px 12px;background:#F8FAFC;border-radius:10px;border:1px solid #E2E8F0;max-height:80px;overflow:auto;-webkit-flex-shrink:0;flex-shrink:0}
+  .ht{font-size:11px;font-weight:700;color:#64748B;margin-bottom:4px}
+  .hii{font-size:11px;color:#475569;line-height:1.6}
+  .hii .d{color:#4F46E5}
+  .hii .tp{color:#94A3B8;margin-left:4px}
+  .toast{position:fixed;bottom:24px;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:#1E293B;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:100;pointer-events:none;-webkit-animation:fi .3s ease;animation:fi .3s ease}
+  @-webkit-keyframes fi{from{opacity:0;-webkit-transform:translate(-50%,10px)}to{opacity:1;-webkit-transform:translate(-50%,0)}}
+  @keyframes fi{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 </style>
 </head>
 <body>
-
-<div class="header">
+<div class="hd">
   <h1>⛪ 중고등부 토요교제 순번표</h1>
   <p>2026년 • 이름을 클릭해서 순서를 교환하세요 (형제↔형제, 자매↔자매 독립)</p>
-</div>
-<div class="month-nav" id="mnav"></div>
-<div class="toolbar">
-  <span>↔ 교환됨</span><span>•</span><span>형제/자매 독립 교환</span>
-  <div class="toolbar-btns">
-    <button class="btn-undo" id="bUndo" disabled onclick="undoLast()">↩ 되돌리기</button>
-    <button class="btn-reset" onclick="resetAll()">초기화</button>
+  <div class="sync" id="syncBar">
+    <span><span class="dot off" id="dotEl"></span> 연결 중...</span>
+    <span id="syncTime"></span>
+    <button onclick="manualRefresh()">↻ 새로고침</button>
   </div>
 </div>
-<div class="table-wrap" id="tw">
+<div class="mn" id="mnav"></div>
+<div class="tb">
+  <span>↔ 교환됨</span><span>•</span><span>형제/자매 독립 교환</span>
+  <div class="tbb">
+    <button class="bu" id="bUndo" disabled onclick="undoLast()">↩ 되돌리기</button>
+    <button class="br" onclick="resetAll()">초기화</button>
+  </div>
+</div>
+<div class="tw" id="tw">
   <table><thead><tr>
-    <th class="col-date">날짜</th>
-    <th class="col-event">일정</th>
-    <th class="col-brother">형제T</th>
-    <th class="col-sister">자매T</th>
+    <th style="text-align:left;color:#475569;width:22%">날짜</th>
+    <th style="text-align:left;color:#475569;width:20%">일정</th>
+    <th style="text-align:center;color:#4338CA;width:25%">형제T</th>
+    <th style="text-align:center;color:#831843;width:25%">자매T</th>
   </tr></thead><tbody id="tb"></tbody></table>
 </div>
-<div class="hist" id="hBox" style="display:none">
-  <div class="hist-t" id="hTitle"></div>
+<div class="hi" id="hBox" style="display:none">
+  <div class="ht" id="hTitle"></div>
   <div id="hList"></div>
 </div>
 <div class="toast" id="tst" style="display:none"></div>
+
+<!-- Firebase SDK (compat version for simple script usage) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
 <script>
 (function(){
   "use strict";
 
+  // ── Firebase 초기화 ──
+  var firebaseConfig = {
+    apiKey: "AIzaSyBcOndN7eADAZlLTNQG77LTfRZlUN2lPwE",
+    authDomain: "church-schedule-d5203.firebaseapp.com",
+    databaseURL: "https://church-schedule-d5203-default-rtdb.firebaseio.com",
+    projectId: "church-schedule-d5203",
+    storageBucket: "church-schedule-d5203.firebasestorage.app",
+    messagingSenderId: "199191649844",
+    appId: "1:199191649844:web:c74e316e5a19144a763461"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database();
+  var dataRef = db.ref("schedule2026");
+
+  // ── 데이터 ──
   var BROS = ["심어진","임우혁","정형기","홍정의","김호진"];
   var SISS = ["김유진","김호연","심규리","정희주"];
-
   var MAN = {
     "2026-01-10":{b:"김호진",s:"심규리"},
     "2026-01-17":{ev:"대전도집회"},
@@ -198,7 +131,6 @@
     "2026-02-28":{b:"김호진",s:"정희주"}
   };
   var ASTART = "2026-03-07";
-
   var BC = {
     "김호진":{bg:"#EEF2FF",bd:"#818CF8",tx:"#4338CA"},
     "심어진":{bg:"#F0FDF4",bd:"#86EFAC",tx:"#166534"},
@@ -213,288 +145,342 @@
     "정희주":{bg:"#FCE7F3",bd:"#F9A8D4",tx:"#831843"}
   };
 
-  function pad(n){ return n < 10 ? "0"+n : ""+n; }
-
+  function pad(n){ return n<10?"0"+n:""+n; }
   function genSat(){
-    var r = [];
-    var d = new Date(Date.UTC(2026,0,10));
-    while(d.getUTCFullYear() <= 2026){
+    var r=[];var d=new Date(Date.UTC(2026,0,10));
+    while(d.getUTCFullYear()<=2026){
       r.push(d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate()));
-      d = new Date(d.getTime() + 604800000);
+      d=new Date(d.getTime()+604800000);
     }
     return r;
   }
-  var SATS = genSat();
+  var SATS=genSat();
 
   function fmtD(iso){
-    var d = new Date(iso+"T00:00:00Z");
-    var dow = ["일","월","화","수","목","금","토"][d.getUTCDay()];
-    return (d.getUTCMonth()+1)+"/"+d.getUTCDate()+" ("+dow+")";
+    var d=new Date(iso+"T00:00:00Z");
+    return(d.getUTCMonth()+1)+"/"+d.getUTCDate()+" ("+["일","월","화","수","목","금","토"][d.getUTCDay()]+")";
   }
 
-  function copyObj(o){
-    var r = {};
-    for(var k in o) if(o.hasOwnProperty(k)) r[k] = o[k];
-    return r;
-  }
+  function copyObj(o){var r={};for(var k in o)if(o.hasOwnProperty(k))r[k]=o[k];return r;}
 
-  var events = {"2026-01-17":"대전도집회","2026-01-31":"중고등부 집회","2026-02-14":"설연휴"};
+  // ── 상태 ──
+  var events = {};
+  var bSwaps = [];
+  var sSwaps = [];
   var sched = [];
   var selB = null, selS = null;
-  var hist = [];
   var editIdx = null;
   var scMo = 1;
+  var connected = false;
 
-  function build(){
-    sched = [];
-    var bi = 0, si = 0;
-    for(var i = 0; i < SATS.length; i++){
-      var date = SATS[i];
-      var m = MAN[date];
-      if(date < ASTART && m){
-        if(m.ev){
-          sched.push({date:date, event:m.ev, brother:"", sister:"", bs:false, ss:false});
-        } else {
-          sched.push({date:date, event:"", brother:m.b||"", sister:m.s||"", bs:false, ss:false});
-        }
-      } else if(date < ASTART){
-        var ev = events[date] || "";
-        sched.push({date:date, event:ev, brother:"", sister:"", bs:false, ss:false});
-      } else {
-        var ev2 = events[date] || "";
-        if(ev2){
-          sched.push({date:date, event:ev2, brother:"", sister:"", bs:false, ss:false});
-        } else {
-          sched.push({date:date, event:"", brother:BROS[bi%BROS.length], sister:SISS[si%SISS.length], bs:false, ss:false});
-          bi++; si++;
+  function buildBase(ev){
+    var r=[];var bi=0,si=0;
+    for(var i=0;i<SATS.length;i++){
+      var date=SATS[i];var m=MAN[date];
+      if(date<ASTART&&m){
+        if(m.ev)r.push({date:date,event:m.ev,brother:"",sister:"",bs:false,ss:false});
+        else r.push({date:date,event:"",brother:m.b||"",sister:m.s||"",bs:false,ss:false});
+      }else if(date<ASTART){
+        var e2=ev[date]||"";
+        r.push({date:date,event:e2,brother:"",sister:"",bs:false,ss:false});
+      }else{
+        var e3=ev[date]||"";
+        if(e3)r.push({date:date,event:e3,brother:"",sister:"",bs:false,ss:false});
+        else{
+          r.push({date:date,event:"",brother:BROS[bi%BROS.length],sister:SISS[si%SISS.length],bs:false,ss:false});
+          bi++;si++;
         }
       }
     }
+    return r;
   }
 
+  function applySwaps(base,bs,ss){
+    var r=[];
+    for(var i=0;i<base.length;i++)r.push(copyObj(base[i]));
+    if(bs)for(var j=0;j<bs.length;j++){
+      var sw=bs[j];
+      var ai=-1,bi2=-1;
+      for(var k=0;k<r.length;k++){
+        if(r[k].date===sw.dA)ai=k;
+        if(r[k].date===sw.dB)bi2=k;
+      }
+      if(ai>=0&&bi2>=0){
+        var tmp=r[ai].brother;
+        var na=copyObj(r[ai]);na.brother=r[bi2].brother;na.bs=true;r[ai]=na;
+        var nb=copyObj(r[bi2]);nb.brother=tmp;nb.bs=true;r[bi2]=nb;
+      }
+    }
+    if(ss)for(var j2=0;j2<ss.length;j2++){
+      var sw2=ss[j2];
+      var ai2=-1,bi3=-1;
+      for(var k2=0;k2<r.length;k2++){
+        if(r[k2].date===sw2.dA)ai2=k2;
+        if(r[k2].date===sw2.dB)bi3=k2;
+      }
+      if(ai2>=0&&bi3>=0){
+        var tmp2=r[ai2].sister;
+        var na2=copyObj(r[ai2]);na2.sister=r[bi3].sister;na2.ss=true;r[ai2]=na2;
+        var nb2=copyObj(r[bi3]);nb2.sister=tmp2;nb2.ss=true;r[bi3]=nb2;
+      }
+    }
+    return r;
+  }
+
+  function rebuildSched(){
+    var base=buildBase(events);
+    sched=applySwaps(base,bSwaps,sSwaps);
+  }
+
+  // ── Firebase 실시간 리스너 ──
+  function startListening(){
+    dataRef.on("value",function(snap){
+      var data=snap.val();
+      if(data){
+        events=data.events||{};
+        bSwaps=data.bSwaps||[];
+        sSwaps=data.sSwaps||[];
+      }else{
+        events={"2026-01-17":"대전도집회","2026-01-31":"중고등부 집회","2026-02-14":"설연휴"};
+        bSwaps=[];sSwaps=[];
+      }
+      rebuildSched();
+      render();
+      updateSyncStatus(true);
+    },function(err){
+      console.error("Firebase read error:",err);
+      updateSyncStatus(false);
+    });
+  }
+
+  function saveToFirebase(){
+    dataRef.set({
+      events:events,
+      bSwaps:bSwaps,
+      sSwaps:sSwaps,
+      updatedAt:new Date().toISOString()
+    }).catch(function(err){
+      console.error("Firebase write error:",err);
+      toast("저장 실패 - 네트워크를 확인해주세요");
+    });
+  }
+
+  function updateSyncStatus(isConnected){
+    connected=isConnected;
+    var dot=document.getElementById("dotEl");
+    dot.className=isConnected?"dot on":"dot off";
+    var st=document.getElementById("syncTime");
+    var now=new Date();
+    st.textContent="동기화: "+pad(now.getHours())+":"+pad(now.getMinutes());
+  }
+
+  // ── 연결 상태 감지 ──
+  firebase.database().ref(".info/connected").on("value",function(snap){
+    updateSyncStatus(snap.val()===true);
+  });
+
+  // ── 토스트 ──
   var tTimer;
   function toast(msg){
-    var t = document.getElementById("tst");
-    t.textContent = msg; t.style.display = "block";
+    var t=document.getElementById("tst");
+    t.textContent=msg;t.style.display="block";
     clearTimeout(tTimer);
-    tTimer = setTimeout(function(){ t.style.display = "none"; }, 2500);
+    tTimer=setTimeout(function(){t.style.display="none";},2500);
   }
 
-  function mkChip(name, type, idx, sel, swp, dis){
-    if(!name) return '<span class="chip-no">\u2014</span>';
-    var c = type === "b" ? (BC[name]||{bg:"#F1F5F9",bd:"#CBD5E1",tx:"#475569"}) : (SC[name]||{bg:"#F1F5F9",bd:"#CBD5E1",tx:"#475569"});
-    var cls = "chip" + (sel ? " sel" : "");
-    var bg = sel ? c.bd : c.bg;
-    var color = sel ? "#fff" : c.tx;
-    var bdr = sel ? "2.5px solid "+c.bd : "1.5px solid "+c.bd;
-    var shd = sel ? "0 0 0 3px "+c.bd+"44" : (swp ? "0 2px 8px "+c.bd+"66" : "none");
-    var oc = dis ? "" : " onclick=\""+(type==="b"?"window._cB":"window._cS")+"("+idx+")\"";
-    var sw = swp ? "\u21C4 " : "";
-    return '<button class="'+cls+'" style="background:'+bg+';color:'+color+';border:'+bdr+';box-shadow:'+shd+'"'+oc+'>'+sw+name+'</button>';
+  // ── 렌더 ──
+  function mkChip(name,type,idx,sel,swp,dis){
+    if(!name)return'<span class="chn">\u2014</span>';
+    var c=type==="b"?(BC[name]||{bg:"#F1F5F9",bd:"#CBD5E1",tx:"#475569"}):(SC[name]||{bg:"#F1F5F9",bd:"#CBD5E1",tx:"#475569"});
+    var cls="ch"+(sel?" sel":"");
+    var bg=sel?c.bd:c.bg;var color=sel?"#fff":c.tx;
+    var bdr=sel?"2.5px solid "+c.bd:"1.5px solid "+c.bd;
+    var shd=sel?"0 0 0 3px "+c.bd+"44":(swp?"0 2px 8px "+c.bd+"66":"none");
+    var oc=dis?"":" onclick=\""+(type==="b"?"window._cB":"window._cS")+"("+idx+")\"";
+    var sw=swp?"\u21C4 ":"";
+    return'<button class="'+cls+'" style="background:'+bg+';color:'+color+';border:'+bdr+';box-shadow:'+shd+'"'+oc+'>'+sw+name+'</button>';
   }
 
   function render(){
-    var today = new Date().toISOString().slice(0,10);
-    var nIdx = -1;
-    for(var x = 0; x < sched.length; x++){
-      if(sched[x].date >= today){ nIdx = x; break; }
-    }
-    var tb = document.getElementById("tb");
-    tb.innerHTML = "";
-    var ms = [];
-    var lastM = -1;
+    var today=new Date().toISOString().slice(0,10);
+    var nIdx=-1;
+    for(var x=0;x<sched.length;x++){if(sched[x].date>=today){nIdx=x;break;}}
+    var tb=document.getElementById("tb");
+    tb.innerHTML="";
+    var ms=[];var lastM=-1;
 
-    for(var i = 0; i < sched.length; i++){
-      var row = sched[i];
-      var mo = parseInt(row.date.slice(5,7), 10);
-      var mStart = (mo !== lastM);
-      lastM = mo;
-      var isN = (i === nIdx);
-      var isP = (row.date < today);
+    for(var i=0;i<sched.length;i++){
+      var row=sched[i];var mo=parseInt(row.date.slice(5,7),10);
+      var mStart=(mo!==lastM);lastM=mo;
+      var isN=(i===nIdx);var isP=(row.date<today);
 
       if(mStart){
         ms.push(mo);
-        var mtr = document.createElement("tr");
-        mtr.className = "month-sep" + (i === 0 ? " first" : "");
-        mtr.id = "mo-" + mo;
-        mtr.innerHTML = '<td colspan="4">' + mo + '월</td>';
+        var mtr=document.createElement("tr");
+        mtr.className="ms"+(i===0?" f":"");
+        mtr.id="mo-"+mo;
+        mtr.innerHTML='<td colspan="4">'+mo+'월</td>';
         tb.appendChild(mtr);
       }
+      var tr=document.createElement("tr");
+      tr.className="r"+(isP?" p":"")+(isN?" n":"")+(row.event?" ev":"");
 
-      var tr = document.createElement("tr");
-      var cls = "row";
-      if(isP) cls += " past";
-      if(isN) cls += " next";
-      if(row.event) cls += " ev";
-      tr.className = cls;
-
-      var dh = (isN ? '<span class="nxt-bar"></span>' : '') + fmtD(row.date);
-
+      var dh=(isN?'<span class="nb"></span>':'')+fmtD(row.date);
       var eh;
-      if(editIdx === i){
-        eh = '<div class="ev-edit"><input id="evi" value="'+(row.event||"")+'" placeholder="일정 입력 (빈칸=삭제)"><button class="bok" onclick="window._sEv('+i+')">✓</button><button class="bno" onclick="window._cEv()">✕</button></div>';
-      } else if(row.event){
-        eh = '<span class="ev-lbl has"'+(isP?'':' onclick="window._eEv('+i+')"')+'>'+row.event+'</span>';
-      } else {
-        eh = isP ? '' : '<span class="ev-lbl no" onclick="window._eEv('+i+')">＋</span>';
+      if(editIdx===i){
+        eh='<div class="ee"><input id="evi" value="'+(row.event||"")+'" placeholder="일정 입력 (빈칸=삭제)"><button class="ok" onclick="window._sEv('+i+')">✓</button><button class="no2" onclick="window._cEv()">✕</button></div>';
+      }else if(row.event){
+        eh='<span class="el h"'+(isP?'':' onclick="window._eEv('+i+')"')+'>'+row.event+'</span>';
+      }else{
+        eh=isP?'':'<span class="el no" onclick="window._eEv('+i+')">＋</span>';
       }
 
-      tr.innerHTML = '<td class="cd">'+dh+'</td><td class="ce">'+eh+'</td><td class="cn">'+mkChip(row.brother,"b",i,selB===i,row.bs,isP||!!row.event)+'</td><td class="cn">'+mkChip(row.sister,"s",i,selS===i,row.ss,isP||!!row.event)+'</td>';
+      tr.innerHTML='<td class="cd">'+dh+'</td><td class="ce">'+eh+'</td><td class="cn">'+mkChip(row.brother,"b",i,selB===i,row.bs,isP||!!row.event)+'</td><td class="cn">'+mkChip(row.sister,"s",i,selS===i,row.ss,isP||!!row.event)+'</td>';
       tb.appendChild(tr);
 
-      if(editIdx === i){
-        (function(){
+      if(editIdx===i){
+        (function(ii){
           setTimeout(function(){
-            var inp = document.getElementById("evi");
-            if(inp){
-              inp.focus();
-              inp.addEventListener("keydown", function(e){
-                if(e.key === "Enter") window._sEv(i);
-              });
-            }
-          }, 50);
-        })();
+            var inp=document.getElementById("evi");
+            if(inp){inp.focus();inp.addEventListener("keydown",function(e){if(e.key==="Enter")window._sEv(ii);});}
+          },50);
+        })(i);
       }
     }
     renderNav(ms);
     renderHist();
-    document.getElementById("bUndo").disabled = (hist.length === 0);
+    document.getElementById("bUndo").disabled=(bSwaps.length+sSwaps.length===0);
   }
 
   function renderNav(ms){
-    var nav = document.getElementById("mnav");
-    nav.innerHTML = "";
-    for(var j = 0; j < ms.length; j++){
-      var m = ms[j];
-      var btn = document.createElement("button");
-      btn.className = "month-btn" + (scMo === m ? " active" : "");
-      btn.textContent = m + "월";
-      (function(mm){ btn.onclick = function(){ scrollM(mm); }; })(m);
+    var nav=document.getElementById("mnav");nav.innerHTML="";
+    for(var j=0;j<ms.length;j++){
+      var m=ms[j];var btn=document.createElement("button");
+      btn.className="mb"+(scMo===m?" a":"");
+      btn.textContent=m+"월";
+      (function(mm){btn.onclick=function(){scrollM(mm);};})(m);
       nav.appendChild(btn);
     }
   }
 
   function renderHist(){
-    var box = document.getElementById("hBox");
-    if(hist.length === 0){ box.style.display = "none"; return; }
-    box.style.display = "block";
-    document.getElementById("hTitle").textContent = "교환 이력 (" + hist.length + "건)";
-    var list = document.getElementById("hList");
-    list.innerHTML = "";
-    for(var i = 0; i < hist.length; i++){
-      var s = hist[i];
-      var div = document.createElement("div");
-      div.className = "hist-i";
-      div.innerHTML = '<span class="d">'+fmtD(sched[s.fi].date)+'</span> '+s.fn+' ↔ <span class="d">'+fmtD(sched[s.ti].date)+'</span> '+s.tn+'<span class="tp">('+( s.tp === "b" ? "형제" : "자매" )+')</span>';
+    var box=document.getElementById("hBox");
+    var total=bSwaps.length+sSwaps.length;
+    if(total===0){box.style.display="none";return;}
+    box.style.display="block";
+    document.getElementById("hTitle").textContent="교환 이력 ("+total+"건)";
+    var list=document.getElementById("hList");list.innerHTML="";
+    for(var i=0;i<bSwaps.length;i++){
+      var s=bSwaps[i];var div=document.createElement("div");div.className="hii";
+      div.innerHTML='<span class="d">'+fmtD(s.dA)+'</span> '+s.nA+' ↔ <span class="d">'+fmtD(s.dB)+'</span> '+s.nB+'<span class="tp">(형제)</span>';
       list.appendChild(div);
+    }
+    for(var i2=0;i2<sSwaps.length;i2++){
+      var s2=sSwaps[i2];var div2=document.createElement("div");div2.className="hii";
+      div2.innerHTML='<span class="d">'+fmtD(s2.dA)+'</span> '+s2.nA+' ↔ <span class="d">'+fmtD(s2.dB)+'</span> '+s2.nB+'<span class="tp">(자매)</span>';
+      list.appendChild(div2);
     }
   }
 
   function scrollM(m){
-    var el = document.getElementById("mo-"+m);
-    var wrap = document.getElementById("tw");
-    if(el && wrap){
-      wrap.scrollTop += el.getBoundingClientRect().top - wrap.getBoundingClientRect().top - 8;
-    }
+    var el=document.getElementById("mo-"+m);var wrap=document.getElementById("tw");
+    if(el&&wrap)wrap.scrollTop+=el.getBoundingClientRect().top-wrap.getBoundingClientRect().top-8;
   }
 
-  document.getElementById("tw").addEventListener("scroll", function(){
-    var wrap = this;
-    var cur = 1;
-    for(var m = 1; m <= 12; m++){
-      var el = document.getElementById("mo-"+m);
-      if(el && el.offsetTop - wrap.offsetTop <= wrap.scrollTop + 60) cur = m;
+  document.getElementById("tw").addEventListener("scroll",function(){
+    var wrap=this;var cur=1;
+    for(var m=1;m<=12;m++){
+      var el=document.getElementById("mo-"+m);
+      if(el&&el.offsetTop-wrap.offsetTop<=wrap.scrollTop+60)cur=m;
     }
-    if(cur !== scMo){
-      scMo = cur;
-      var active = [];
-      for(var mm = 1; mm <= 12; mm++){
-        if(document.getElementById("mo-"+mm)) active.push(mm);
-      }
+    if(cur!==scMo){
+      scMo=cur;
+      var active=[];for(var mm=1;mm<=12;mm++){if(document.getElementById("mo-"+mm))active.push(mm);}
       renderNav(active);
     }
   });
 
-  // 형제 클릭
-  window._cB = function(idx){
-    var row = sched[idx];
-    if(row.event || !row.brother) return;
-    if(selB === null){ selB = idx; render(); return; }
-    if(selB === idx){ selB = null; render(); return; }
-    var a = sched[selB], b = sched[idx];
-    if(a.brother === b.brother){ toast("같은 사람끼리는 교환할 수 없어요"); selB = null; render(); return; }
-    var fn = a.brother, tn = b.brother;
-    var na = copyObj(a); na.brother = tn; na.bs = true; sched[selB] = na;
-    var nb = copyObj(b); nb.brother = fn; nb.bs = true; sched[idx] = nb;
-    hist.push({tp:"b", fi:selB, ti:idx, fn:fn, tn:tn});
-    selB = null; render();
-    toast(fn+" ↔ "+tn+" 교환 완료!");
+  // ── 형제 클릭 ──
+  window._cB=function(idx){
+    var row=sched[idx];if(row.event||!row.brother)return;
+    if(selB===null){selB=idx;render();return;}
+    if(selB===idx){selB=null;render();return;}
+    var a=sched[selB],b=sched[idx];
+    if(a.brother===b.brother){toast("같은 사람끼리는 교환할 수 없어요");selB=null;render();return;}
+    bSwaps.push({dA:a.date,dB:b.date,nA:a.brother,nB:b.brother});
+    rebuildSched();selB=null;render();
+    toast(a.brother+" ↔ "+b.brother+" 교환 완료!");
+    saveToFirebase();
   };
 
-  // 자매 클릭
-  window._cS = function(idx){
-    var row = sched[idx];
-    if(row.event || !row.sister) return;
-    if(selS === null){ selS = idx; render(); return; }
-    if(selS === idx){ selS = null; render(); return; }
-    var a = sched[selS], b = sched[idx];
-    if(a.sister === b.sister){ toast("같은 사람끼리는 교환할 수 없어요"); selS = null; render(); return; }
-    var fn = a.sister, tn = b.sister;
-    var na = copyObj(a); na.sister = tn; na.ss = true; sched[selS] = na;
-    var nb = copyObj(b); nb.sister = fn; nb.ss = true; sched[idx] = nb;
-    hist.push({tp:"s", fi:selS, ti:idx, fn:fn, tn:tn});
-    selS = null; render();
-    toast(fn+" ↔ "+tn+" 교환 완료!");
+  // ── 자매 클릭 ──
+  window._cS=function(idx){
+    var row=sched[idx];if(row.event||!row.sister)return;
+    if(selS===null){selS=idx;render();return;}
+    if(selS===idx){selS=null;render();return;}
+    var a=sched[selS],b=sched[idx];
+    if(a.sister===b.sister){toast("같은 사람끼리는 교환할 수 없어요");selS=null;render();return;}
+    sSwaps.push({dA:a.date,dB:b.date,nA:a.sister,nB:b.sister});
+    rebuildSched();selS=null;render();
+    toast(a.sister+" ↔ "+b.sister+" 교환 완료!");
+    saveToFirebase();
   };
 
-  // 되돌리기
-  window.undoLast = function(){
-    if(!hist.length) return;
-    var last = hist.pop();
-    var key = last.tp === "b" ? "brother" : "sister";
-    var a = sched[last.fi], b = sched[last.ti];
-    var na = copyObj(a);
-    var nb = copyObj(b);
-    var tmp = na[key];
-    na[key] = nb[key];
-    nb[key] = tmp;
-    sched[last.fi] = na;
-    sched[last.ti] = nb;
-    render(); toast("교환을 되돌렸어요");
+  // ── 되돌리기 ──
+  window.undoLast=function(){
+    if(bSwaps.length+sSwaps.length===0)return;
+    if(bSwaps.length>0)bSwaps.pop();
+    else sSwaps.pop();
+    rebuildSched();render();
+    toast("교환을 되돌렸어요");
+    saveToFirebase();
   };
 
-  // 초기화
-  window.resetAll = function(){
-    build(); hist = []; selB = null; selS = null;
-    render(); toast("전체 순번을 초기화했어요");
+  // ── 초기화 ──
+  window.resetAll=function(){
+    if(!confirm("모든 교환 내역을 초기화할까요?"))return;
+    bSwaps=[];sSwaps=[];
+    rebuildSched();selB=null;selS=null;render();
+    toast("전체 순번을 초기화했어요");
+    saveToFirebase();
   };
 
-  // 일정 편집
-  window._eEv = function(idx){ editIdx = idx; render(); };
-  window._cEv = function(){ editIdx = null; render(); };
-  window._sEv = function(idx){
-    var inp = document.getElementById("evi");
-    var val = inp ? inp.value.replace(/^\s+|\s+$/g,"") : "";
-    var date = sched[idx].date;
-    if(val) events[date] = val; else delete events[date];
-    build(); hist = []; selB = null; selS = null; editIdx = null;
-    render(); toast(val ? "일정 추가 → 순번 재배정" : "일정 삭제 → 순번 재배정");
+  // ── 일정 편집 ──
+  window._eEv=function(idx){editIdx=idx;render();};
+  window._cEv=function(){editIdx=null;render();};
+  window._sEv=function(idx){
+    var inp=document.getElementById("evi");
+    var val=inp?inp.value.replace(/^\s+|\s+$/g,""):"";
+    var date=sched[idx].date;
+    if(val)events[date]=val;else delete events[date];
+    bSwaps=[];sSwaps=[];
+    rebuildSched();editIdx=null;selB=null;selS=null;render();
+    toast(val?"일정 추가 → 순번 재배정":"일정 삭제 → 순번 재배정");
+    saveToFirebase();
   };
 
-  // 초기 실행
-  build();
+  // ── 새로고침 ──
+  window.manualRefresh=function(){
+    dataRef.once("value").then(function(snap){
+      var data=snap.val();
+      if(data){events=data.events||{};bSwaps=data.bSwaps||[];sSwaps=data.sSwaps||[];}
+      rebuildSched();render();updateSyncStatus(true);
+      toast("최신 데이터를 불러왔어요");
+    });
+  };
+
+  // ── 시작 ──
+  events={"2026-01-17":"대전도집회","2026-01-31":"중고등부 집회","2026-02-14":"설연휴"};
+  rebuildSched();
   render();
+  startListening();
 
-  // 다음 교제일로 스크롤
   setTimeout(function(){
-    var today = new Date().toISOString().slice(0,10);
-    for(var i = 0; i < sched.length; i++){
-      if(sched[i].date >= today){
-        scrollM(parseInt(sched[i].date.slice(5,7), 10));
-        break;
-      }
+    var today=new Date().toISOString().slice(0,10);
+    for(var i=0;i<sched.length;i++){
+      if(sched[i].date>=today){scrollM(parseInt(sched[i].date.slice(5,7),10));break;}
     }
-  }, 300);
+  },500);
 
 })();
 </script>
