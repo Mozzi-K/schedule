@@ -59,6 +59,26 @@
   .hii .d{color:#4F46E5}
   .hii .tp{color:#94A3B8;margin-left:4px}
   .toast{position:fixed;bottom:24px;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);background:#1E293B;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:100;pointer-events:none;-webkit-animation:fi .3s ease;animation:fi .3s ease}
+  .mbg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,.55);z-index:200;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:20px;-webkit-animation:mfi .2s ease;animation:mfi .2s ease}
+  .md{background:#fff;border-radius:16px;max-width:380px;width:100%;padding:22px 22px 18px;box-shadow:0 20px 50px rgba(0,0,0,.25);-webkit-animation:mup .25s ease;animation:mup .25s ease}
+  .md h3{font-size:17px;font-weight:800;color:#DC2626;margin:0 0 12px;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;gap:6px}
+  .md p{font-size:13px;color:#475569;line-height:1.6;margin:0 0 8px}
+  .md p strong{color:#DC2626;font-weight:700}
+  .md .cnt{background:#FEF2F2;border:1px solid #FECACA;border-radius:8px;padding:8px 12px;margin:10px 0 14px;font-size:12px;color:#991B1B}
+  .md .agr{display:-webkit-flex;display:flex;-webkit-align-items:flex-start;align-items:flex-start;gap:8px;padding:10px 12px;background:#F8FAFC;border-radius:10px;margin-bottom:14px;cursor:pointer;-webkit-user-select:none;user-select:none}
+  .md .agr input{margin-top:2px;width:16px;height:16px;-webkit-flex-shrink:0;flex-shrink:0;cursor:pointer;accent-color:#DC2626}
+  .md .agr span{font-size:13px;color:#334155;font-weight:500;line-height:1.5}
+  .md .mbtns{display:-webkit-flex;display:flex;gap:8px}
+  .md .mbtns button{-webkit-flex:1;flex:1;padding:11px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;-webkit-transition:all .15s;transition:all .15s}
+  .md .mc{background:#F1F5F9;color:#334155}
+  .md .mc:active{background:#E2E8F0}
+  .md .mok{background:#DC2626;color:#fff}
+  .md .mok:active{background:#B91C1C}
+  .md .mok:disabled{background:#FCA5A5;cursor:not-allowed;opacity:.7}
+  @-webkit-keyframes mfi{from{opacity:0}to{opacity:1}}
+  @keyframes mfi{from{opacity:0}to{opacity:1}}
+  @-webkit-keyframes mup{from{opacity:0;-webkit-transform:translateY(20px)}to{opacity:1;-webkit-transform:translateY(0)}}
+  @keyframes mup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
   @-webkit-keyframes fi{from{opacity:0;-webkit-transform:translate(-50%,10px)}to{opacity:1;-webkit-transform:translate(-50%,0)}}
   @keyframes fi{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
 </style>
@@ -94,6 +114,22 @@
   <div id="hList"></div>
 </div>
 <div class="toast" id="tst" style="display:none"></div>
+<div class="mbg" id="rsModal" style="display:none">
+  <div class="md">
+    <h3>⚠️ 정말 초기화할까요?</h3>
+    <p>모든 <strong>교환 내역</strong>이 완전히 삭제됩니다.</p>
+    <p>이 작업은 <strong>되돌릴 수 없어요.</strong></p>
+    <div class="cnt" id="rsCnt"></div>
+    <label class="agr">
+      <input type="checkbox" id="rsAgree">
+      <span>위 내용을 확인했고 초기화에 동의합니다</span>
+    </label>
+    <div class="mbtns">
+      <button class="mc" onclick="window._rsClose()">취소</button>
+      <button class="mok" id="rsOk" disabled onclick="window._rsConfirm()">초기화</button>
+    </div>
+  </div>
+</div>
 
 <!-- Firebase SDK (compat version for simple script usage) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -436,14 +472,36 @@
     saveToFirebase();
   };
 
-  // ── 초기화 ──
+  // ── 초기화 (모달 확인) ──
   window.resetAll=function(){
-    if(!confirm("모든 교환 내역을 초기화할까요?"))return;
+    var bCount=bSwaps.length, sCount=sSwaps.length;
+    var parts=[];
+    if(bCount>0)parts.push("형제 교환 "+bCount+"건");
+    if(sCount>0)parts.push("자매 교환 "+sCount+"건");
+    document.getElementById("rsCnt").textContent=parts.length>0?("삭제될 내역: "+parts.join(", ")):"현재 교환 내역이 없습니다";
+    document.getElementById("rsAgree").checked=false;
+    document.getElementById("rsOk").disabled=true;
+    document.getElementById("rsModal").style.display="flex";
+  };
+  window._rsClose=function(){
+    document.getElementById("rsModal").style.display="none";
+  };
+  window._rsConfirm=function(){
+    if(!document.getElementById("rsAgree").checked)return;
     bSwaps=[];sSwaps=[];
     rebuildSched();selB=null;selS=null;render();
+    document.getElementById("rsModal").style.display="none";
     toast("전체 순번을 초기화했어요");
     saveToFirebase();
   };
+  // 체크박스 변경 시 초기화 버튼 활성화
+  document.getElementById("rsAgree").addEventListener("change",function(){
+    document.getElementById("rsOk").disabled=!this.checked;
+  });
+  // 배경 클릭 시 닫기
+  document.getElementById("rsModal").addEventListener("click",function(e){
+    if(e.target===this)window._rsClose();
+  });
 
   // ── 일정 편집 ──
   window._eEv=function(idx){editIdx=idx;render();};
