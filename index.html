@@ -34,7 +34,7 @@
   .ms td{padding:10px 10px 6px;font-size:13px;font-weight:800;color:#4F46E5;background:#F8FAFC;letter-spacing:.5px;border-top:2px solid #E2E8F0}
   .ms.f td{border-top:none}
   tr.r{border-bottom:1px solid #F1F5F9}
-  tr.r.p{opacity:.55}
+  tr.r.p{opacity:.7}
   tr.r.n{background:#FFFBEB}
   tr.r.ev{background:#F1F5F9}
   tr.r.n .cd{font-weight:700;color:#D97706}
@@ -330,12 +330,12 @@
       if(editIdx===i){
         eh='<div class="ee"><input id="evi" value="'+(row.event||"")+'" placeholder="일정 입력 (빈칸=삭제)"><button class="ok" onclick="window._sEv('+i+')">✓</button><button class="no2" onclick="window._cEv()">✕</button></div>';
       }else if(row.event){
-        eh='<span class="el h"'+(isP?'':' onclick="window._eEv('+i+')"')+'>'+row.event+'</span>';
+        eh='<span class="el h" onclick="window._eEv('+i+')">'+row.event+'</span>';
       }else{
-        eh=isP?'':'<span class="el no" onclick="window._eEv('+i+')">＋</span>';
+        eh='<span class="el no" onclick="window._eEv('+i+')">＋</span>';
       }
 
-      tr.innerHTML='<td class="cd">'+dh+'</td><td class="ce">'+eh+'</td><td class="cn">'+mkChip(row.brother,"b",i,selB===i,row.bs,isP||!!row.event)+'</td><td class="cn">'+mkChip(row.sister,"s",i,selS===i,row.ss,isP||!!row.event)+'</td>';
+      tr.innerHTML='<td class="cd">'+dh+'</td><td class="ce">'+eh+'</td><td class="cn">'+mkChip(row.brother,"b",i,selB===i,row.bs,!!row.event)+'</td><td class="cn">'+mkChip(row.sister,"s",i,selS===i,row.ss,!!row.event)+'</td>';
       tb.appendChild(tr);
 
       if(editIdx===i){
