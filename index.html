@@ -241,7 +241,7 @@
         if(r[k].date===sw.dA)ai=k;
         if(r[k].date===sw.dB)bi2=k;
       }
-      if(ai>=0&&bi2>=0){
+      if(ai>=0&&bi2>=0&&r[ai].brother&&r[bi2].brother){
         var tmp=r[ai].brother;
         var na=copyObj(r[ai]);na.brother=r[bi2].brother;na.bs=true;r[ai]=na;
         var nb=copyObj(r[bi2]);nb.brother=tmp;nb.bs=true;r[bi2]=nb;
@@ -254,7 +254,7 @@
         if(r[k2].date===sw2.dA)ai2=k2;
         if(r[k2].date===sw2.dB)bi3=k2;
       }
-      if(ai2>=0&&bi3>=0){
+      if(ai2>=0&&bi3>=0&&r[ai2].sister&&r[bi3].sister){
         var tmp2=r[ai2].sister;
         var na2=copyObj(r[ai2]);na2.sister=r[bi3].sister;na2.ss=true;r[ai2]=na2;
         var nb2=copyObj(r[bi3]);nb2.sister=tmp2;nb2.ss=true;r[bi3]=nb2;
@@ -511,9 +511,8 @@
     var val=inp?inp.value.replace(/^\s+|\s+$/g,""):"";
     var date=sched[idx].date;
     if(val)events[date]=val;else delete events[date];
-    bSwaps=[];sSwaps=[];
     rebuildSched();editIdx=null;selB=null;selS=null;render();
-    toast(val?"일정 추가 → 순번 재배정":"일정 삭제 → 순번 재배정");
+    toast(val?"일정을 추가했어요":"일정을 삭제했어요");
     saveToFirebase();
   };
 
